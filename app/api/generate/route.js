@@ -3,9 +3,9 @@ import {
     GoogleGenerativeAI,
     HarmCategory,
     HarmBlockThreshold,
-  } from '@google/generative-ai';
+} from '@google/generative-ai';
 
-
+const MODEL_NAME = 'gemini-1.0-pro-001'
 const systemPrompt = `
 You are a flashcard creator. Your task is to generate concise and effective flashcards based on the given topic or content. Follow these guidelines:
 
@@ -22,6 +22,7 @@ Aim to create a balanced set of flashcards that covers the topic comprehensively
 Consider the cognitive load of the learner; ensure that each flashcard can be understood quickly.
 Incorporate visual elements if applicable to enhance the learning experience.
 Verify the accuracy of the information provided in each flashcard.
+Only generate 10 flashcards.
 
 Return in the following JSON format:
 {
@@ -35,7 +36,7 @@ Return in the following JSON format:
 `;
 
 const genAI = new GoogleGenerativeAI({
-    apiKey: process.env.GOOGLE_GENERATIVE_AI_API_KEY,  // Use environment variable for security
+    apiKey: process.env.GOOGLE_GENERATIVE_AI_API_KEY,  // Ensure your environment variable is set correctly
 });
 
 const generationConfig = {
@@ -45,6 +46,25 @@ const generationConfig = {
     maxOutputTokens: 2048,
 };
 
+const safetySettings = [
+    {
+        category: HarmCategory.HARM_CATEGORY_HARASSMENT,
+        threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
+    },
+    {
+        category: HarmCategory.HARM_CATEGORY_HATE_SPEECH,
+        threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
+    },
+    {
+        category: HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT,
+        threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
+    },
+    {
+        category: HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT,
+        threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
+    },
+];
+
 export async function POST(req) {
     try {
         const data = await req.text();
@@ -52,17 +72,19 @@ export async function POST(req) {
         // Combine system prompt with user input
         const userMessage = `${systemPrompt}\n\nUser Input:\n${data}`;
 
-        // Call the Google Generative AI API
-        const completion = await genAI.generateText({
-            prompt: userMessage,
-            temperature: generationConfig.temperature,
-            topK: generationConfig.topK,
-            topP: generationConfig.topP,
-            maxOutputTokens: generationConfig.maxOutputTokens,
-        });
+        // Start a new chat session with the model
+        const chat = await genAI
+            .getGenerativeModel({ model: MODEL_NAME })  // Replace 'YOUR_MODEL_NAME' with the actual model name
+            .startChat({
+                generationConfig,
+                safetySettings,
+            });
 
-        // Parse the response from Google Generative AI API
-        const flashcards = JSON.parse(completion.candidates[0].output);
+        // Send the user message to the chat instance
+        const result = await chat.sendMessage(userMessage);
+
+        // Parse the response to extract flashcards
+        const flashcards = JSON.parse(result.response.text());
 
         // Return the flashcards as a JSON response
         return NextResponse.json(flashcards);
