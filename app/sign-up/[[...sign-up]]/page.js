@@ -4,7 +4,15 @@ import { SignUp } from '@clerk/nextjs';
 
 export default function SignUpPage() {
   return (
-    <Box sx={{ bgcolor: '#0f0f0f', minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+    <Box
+      sx={{
+        bgcolor: '#0f0f0f',
+        minHeight: '100vh',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+      }}
+    >
       <AppBar position="static" sx={{ bgcolor: '#222', width: '100%' }}>
         <Toolbar sx={{ justifyContent: 'center' }}>
           <Typography variant="h6" sx={{ color: 'white' }}>
@@ -13,7 +21,15 @@ export default function SignUpPage() {
         </Toolbar>
       </AppBar>
 
-      <Container maxWidth="sm" sx={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+      <Container
+        maxWidth="sm"
+        sx={{
+          flex: 1,
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+        }}
+      >
         <Box
           display="flex"
           flexDirection="column"

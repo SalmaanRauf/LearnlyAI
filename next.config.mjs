@@ -1,7 +1,5 @@
-
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  webSocketTimeout: 30000,
   experimental: {
     serverMinification: true,
   },
@@ -18,16 +16,10 @@ const nextConfig = {
       },
     ];
   },
-  webpack: (config) => {
-    return config;
-  },
+  webpack: (config) => config,
   httpAgentOptions: {
     keepAlive: true,
   },
-  server: {
-    host: '0.0.0.0',
-    port: 3000
-  }
 };
 
 export default nextConfig;
