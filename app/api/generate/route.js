@@ -1,11 +1,9 @@
 import { NextResponse } from "next/server";
-import {
-    GoogleGenerativeAI,
-    HarmCategory,
-    HarmBlockThreshold,
-} from '@google/generative-ai';
 
-const MODEL_NAME = 'gemini-1.0-pro-001'
+const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY;
+const YOUR_SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
+const YOUR_SITE_NAME = 'LearnlyAI';
+
 const systemPrompt = `
 You are a flashcard creator. Your task is to generate concise and effective flashcards based on the given topic or content. Follow these guidelines:
 
@@ -35,62 +33,43 @@ Return in the following JSON format:
 }
 `;
 
-const genAI = new GoogleGenerativeAI({
-    apiKey: process.env.GOOGLE_GENERATIVE_AI_API_KEY,  // Ensure your environment variable is set correctly
-});
-
-const generationConfig = {
-    temperature: 0.9,
-    topK: 1,
-    topP: 1,
-    maxOutputTokens: 2048,
-};
-
-const safetySettings = [
-    {
-        category: HarmCategory.HARM_CATEGORY_HARASSMENT,
-        threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
-    },
-    {
-        category: HarmCategory.HARM_CATEGORY_HATE_SPEECH,
-        threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
-    },
-    {
-        category: HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT,
-        threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
-    },
-    {
-        category: HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT,
-        threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
-    },
-];
-
 export async function POST(req) {
-    try {
-        const data = await req.text();
+  try {
+    const data = await req.text();
 
-        // Combine system prompt with user input
-        const userMessage = `${systemPrompt}\n\nUser Input:\n${data}`;
+    const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${OPENROUTER_API_KEY}`,
+        "HTTP-Referer": YOUR_SITE_URL,
+        "X-Title": YOUR_SITE_NAME,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        "model": "meta-llama/llama-3.2-3b-instruct:free",
+        "messages": [
+          {
+            "role": "system",
+            "content": systemPrompt
+          },
+          {
+            "role": "user",
+            "content": data
+          }
+        ]
+      })
+    });
 
-        // Start a new chat session with the model
-        const chat = await genAI
-            .getGenerativeModel({ model: MODEL_NAME })  // Replace 'YOUR_MODEL_NAME' with the actual model name
-            .startChat({
-                generationConfig,
-                safetySettings,
-            });
-
-        // Send the user message to the chat instance
-        const result = await chat.sendMessage(userMessage);
-
-        // Parse the response to extract flashcards
-        const flashcards = JSON.parse(result.response.text());
-
-        // Return the flashcards as a JSON response
-        return NextResponse.json(flashcards);
-    } catch (error) {
-        // Handle errors (e.g., API request failures)
-        console.error('Error generating flashcards:', error);
-        return NextResponse.json({ error: 'Failed to generate flashcards' }, { status: 500 });
+    if (!response.ok) {
+      throw new Error('Failed to generate flashcards');
     }
+
+    const result = await response.json();
+    const flashcards = JSON.parse(result.choices[0].message.content);
+
+    return NextResponse.json(flashcards);
+  } catch (error) {
+    console.error('Error generating flashcards:', error);
+    return NextResponse.json({ error: 'Failed to generate flashcards' }, { status: 500 });
+  }
 }
