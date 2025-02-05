@@ -12,9 +12,6 @@ import {
   CardContent,
   CardActionArea,
   CircularProgress,
-  AppBar,
-  Toolbar,
-  Button,
 } from '@mui/material';
 import { collection, doc, getDoc } from 'firebase/firestore';
 import { db } from '../../firebase';
@@ -62,22 +59,6 @@ export default function FlashcardSets() {
 
   return (
     <Box sx={{ bgcolor: '#0f0f0f', minHeight: '100vh' }}>
-      <AppBar position="static" sx={{ bgcolor: '#222' }}>
-        <Toolbar>
-          <Typography variant="h6" sx={{ flexGrow: 1, color: 'white' }}>
-            LearnlyAI
-          </Typography>
-          <Button 
-            color="inherit" 
-            onClick={() => router.push('/generate')}
-            sx={{ color: 'white', mr: 2 }}
-          >
-            Create New
-          </Button>
-          <UserButton />
-        </Toolbar>
-      </AppBar>
-      
       <Container maxWidth="md" sx={{ pt: 4 }}>
         <Typography variant="h4" component="h1" gutterBottom sx={{ color: 'white' }}>
           My Flashcard Sets

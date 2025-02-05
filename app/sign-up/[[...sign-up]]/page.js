@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container, Box, Typography, AppBar, Toolbar } from '@mui/material';
+import { Container, Box, Typography } from '@mui/material';
 import { SignUp } from '@clerk/nextjs';
 
 export default function SignUpPage() {
@@ -13,14 +13,6 @@ export default function SignUpPage() {
         alignItems: 'center',
       }}
     >
-      <AppBar position="static" sx={{ bgcolor: '#222', width: '100%' }}>
-        <Toolbar sx={{ justifyContent: 'center' }}>
-          <Typography variant="h6" sx={{ color: 'white' }}>
-            LearnlyAI
-          </Typography>
-        </Toolbar>
-      </AppBar>
-
       <Container
         maxWidth="sm"
         sx={{

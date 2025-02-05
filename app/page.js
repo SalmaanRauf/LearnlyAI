@@ -2,17 +2,7 @@
 
 import { useAuth } from '@clerk/nextjs';
 import { useRouter } from 'next/navigation';
-import {
-  AppBar,
-  Toolbar,
-  Typography,
-  Button,
-  Box,
-  Grid,
-  Container,
-  Paper,
-} from '@mui/material';
-import { SignedIn, SignedOut, UserButton } from '@clerk/nextjs';
+import { Box, Typography, Button, Container, Grid, Paper } from '@mui/material';
 import Head from 'next/head';
 
 export default function FlashcardSaaS() {
@@ -33,31 +23,10 @@ export default function FlashcardSaaS() {
         <title>LearnlyAI - Create Flashcards Easily</title>
       </Head>
 
-      <AppBar position="static" sx={{ bgcolor: '#222' }}>
-        <Toolbar>
-          <Typography variant="h6" sx={{ flexGrow: 1, color: 'white' }}>
-            LearnlyAI
-          </Typography>
-          <SignedOut>
-            <Button color="inherit" href="/sign-in" sx={{ color: 'white' }}>
-              Login
-            </Button>
-            <Button
-              color="inherit"
-              href="/sign-up"
-              sx={{ color: 'white', ml: 1 }}
-            >
-              Sign Up
-            </Button>
-          </SignedOut>
-          <SignedIn>
-            <UserButton />
-          </SignedIn>
-        </Toolbar>
-      </AppBar>
-
       {/* Hero Section */}
-      <Box sx={{ textAlign: 'center', py: 12, bgcolor: '#0f0f0f', color: 'white' }}>
+      <Box
+        sx={{ textAlign: 'center', py: 12, bgcolor: '#0f0f0f', color: 'white' }}
+      >
         <Typography
           variant="h2"
           component="h1"
@@ -148,10 +117,7 @@ export default function FlashcardSaaS() {
           </Typography>
           <Grid container spacing={4} justifyContent="center">
             <Grid item xs={12} md={6}>
-              <Paper
-                elevation={4}
-                sx={{ p: 4, bgcolor: '#1e1e1e', borderRadius: 3 }}
-              >
+              <Paper elevation={4} sx={{ p: 4, bgcolor: '#1e1e1e', borderRadius: 3 }}>
                 <Typography variant="h5" sx={{ color: 'white' }} gutterBottom>
                   Basic
                 </Typography>
@@ -172,10 +138,7 @@ export default function FlashcardSaaS() {
               </Paper>
             </Grid>
             <Grid item xs={12} md={6}>
-              <Paper
-                elevation={4}
-                sx={{ p: 4, bgcolor: '#1e1e1e', borderRadius: 3 }}
-              >
+              <Paper elevation={4} sx={{ p: 4, bgcolor: '#1e1e1e', borderRadius: 3 }}>
                 <Typography variant="h5" sx={{ color: 'white' }} gutterBottom>
                   Pro
                 </Typography>

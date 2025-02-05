@@ -17,10 +17,8 @@ export default function RootLayout({ children }) {
         <body className={inter.className}>
           {/* Global persistent header */}
           <Header />
-          {/* Top padding prevents content from being hidden behind the fixed header */}
-          <main style={{ paddingTop: '80px' }}>
-            {children}
-          </main>
+          {/* Padding-top to prevent content being hidden behind the fixed header */}
+          <main style={{ paddingTop: '64px' }}>{children}</main>
         </body>
       </html>
     </ClerkProvider>
