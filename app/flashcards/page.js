@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useAuth } from '@clerk/nextjs';
+import { useAuth, UserButton } from '@clerk/nextjs';
 import { useRouter } from 'next/navigation';
 import {
   Container,
@@ -18,7 +18,6 @@ import {
 } from '@mui/material';
 import { collection, doc, getDoc } from 'firebase/firestore';
 import { db } from '../../firebase';
-import { UserButton } from '@clerk/nextjs';
 
 export default function FlashcardSets() {
   const { isLoaded, userId, isSignedIn } = useAuth();
@@ -36,7 +35,7 @@ export default function FlashcardSets() {
 
   const fetchFlashcardSets = async () => {
     try {
-      const userDocRef = doc(collection(db, 'users'), userId);
+      const userDocRef = doc(db, 'users', userId);
       const userDocSnap = await getDoc(userDocRef);
       
       if (userDocSnap.exists()) {
@@ -84,8 +83,8 @@ export default function FlashcardSets() {
           My Flashcard Sets
         </Typography>
         <Grid container spacing={2}>
-          {sets.map((set) => (
-            <Grid item xs={12} sm={6} md={4} key={set.id}>
+          {sets.map((set, index) => (
+            <Grid item xs={12} sm={6} md={4} key={set.id ? set.id : index}>
               <Card>
                 <CardActionArea onClick={() => router.push(`/flashcards/study/${set.id}`)}>
                   <CardContent>

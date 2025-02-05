@@ -50,7 +50,6 @@ export default function StudySet({ params }) {
           return;
         }
 
-        // Use the trimmed set name to create the collection path.
         const setName = flashcardSet.name.trim();
         console.log('Using flashcard set name:', setName);
         const cardsRef = collection(db, 'users', userId, setName);
@@ -105,7 +104,7 @@ export default function StudySet({ params }) {
       <Container maxWidth="md" sx={{ pt: 4 }}>
         <Grid container spacing={2}>
           {flashcards.map((flashcard, index) => (
-            <Grid item xs={12} sm={6} md={4} key={flashcard.id}>
+            <Grid item xs={12} sm={6} md={4} key={flashcard.id || `card-${index}`}>
               <Card sx={{ perspective: '1000px' }}>
                 <CardActionArea onClick={() => handleCardClick(index)}>
                   <CardContent
