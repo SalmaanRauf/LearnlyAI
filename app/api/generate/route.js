@@ -1,9 +1,30 @@
 import { NextResponse } from "next/server";
+import {
+    GoogleGenerativeAI,
+    HarmCategory,
+    HarmBlockThreshold,
+} from '@google/generative-ai';
 
-const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY;
-const YOUR_SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
-const YOUR_SITE_NAME = 'LearnlyAI';
+const MODEL_NAME = 'gemini-1.0-pro-001';
 
+export async function POST(req) {
+  try {
+    const { prompt } = await req.json();
+    const model = genAI.getGenerativeModel({ model: MODEL_NAME });
+
+    const result = await model.generateContent(prompt);
+    const response = await result.response;
+    
+    return NextResponse.json({ 
+      text: response.text() 
+    });
+  } catch (error) {
+    return NextResponse.json(
+      { error: error.message },
+      { status: 500 }
+    );
+  }
+}
 const systemPrompt = `
 You are a flashcard creator. Your task is to generate concise and effective flashcards based on the given topic or content. Follow these guidelines:
 
