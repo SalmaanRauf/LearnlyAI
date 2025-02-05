@@ -84,13 +84,22 @@ export async function POST(req) {
       safetySettings,
     });
 
-    // If result.response.text is a function, call and await it to obtain the actual text.
-    const responseText =
+    // If result.response.text is a function, call it to obtain the actual text.
+    const rawResponseText =
       typeof result.response.text === 'function'
         ? await result.response.text()
         : result.response.text;
 
-    // Parse the generated text as JSON.
+    // Clean the response text in case it is wrapped in markdown formatting (e.g. ```json ... ```).
+    let responseText = rawResponseText.trim();
+    if (responseText.startsWith('```')) {
+      // Remove the starting backticks and optional "json" specifier.
+      responseText = responseText.replace(/^```(json)?\s*/, '');
+      // Remove trailing backticks.
+      responseText = responseText.replace(/\s*```$/, '');
+    }
+
+    // Parse the cleaned text as JSON.
     const flashcards = JSON.parse(responseText);
 
     return NextResponse.json(flashcards);
