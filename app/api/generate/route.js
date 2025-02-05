@@ -5,7 +5,26 @@ import {
     HarmBlockThreshold,
 } from '@google/generative-ai';
 
-const MODEL_NAME = 'gemini-1.0-pro-001'
+const MODEL_NAME = 'gemini-1.0-pro-001';
+
+export async function POST(req) {
+  try {
+    const { prompt } = await req.json();
+    const model = genAI.getGenerativeModel({ model: MODEL_NAME });
+
+    const result = await model.generateContent(prompt);
+    const response = await result.response;
+    
+    return NextResponse.json({ 
+      text: response.text() 
+    });
+  } catch (error) {
+    return NextResponse.json(
+      { error: error.message },
+      { status: 500 }
+    );
+  }
+}
 const systemPrompt = `
 You are a flashcard creator. Your task is to generate concise and effective flashcards based on the given topic or content. Follow these guidelines:
 

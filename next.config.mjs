@@ -3,10 +3,20 @@
 const nextConfig = {
   webSocketTimeout: 30000,
   experimental: {
-    serverMinification: false,
+    serverMinification: true,
   },
   async headers() {
-    return [];
+    return [
+      {
+        source: '/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=3600, must-revalidate',
+          },
+        ],
+      },
+    ];
   },
   webpack: (config) => {
     return config;

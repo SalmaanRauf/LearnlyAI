@@ -62,7 +62,12 @@ export default function Generate() {
 
     try {
       const batch = writeBatch(db)
-      const userDocRef = doc(collection(db, 'users'), 'user.id')  // replace 'user.id' with actual user ID
+      const { userId } = auth();
+if (!userId) {
+  alert('Please sign in to save flashcards');
+  return;
+}
+const userDocRef = doc(collection(db, 'users'), userId)
       const userDocSnap = await getDoc(userDocRef)
 
       let collections = userDocSnap.exists() ? userDocSnap.data().flashcards || [] : []
