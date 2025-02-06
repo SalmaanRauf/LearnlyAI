@@ -49,6 +49,7 @@ export default function FlashcardSaaS() {
           variant="outlined" 
           color="secondary" 
           sx={{ mt: 4 }}
+          onClick={() => router.push('/learn-more')}
         >
           Learn More
         </Button>
