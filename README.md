@@ -82,5 +82,7 @@ We welcome contributions from the community! If you have suggestions or improvem
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more information.
 
+## Future Developments:
+I'm planning to add an upload section, allowing the LLM to create flashcards directly on the files uploaded.
 ---
 Thanks For Checking Out My App!
