@@ -19,7 +19,7 @@ export default function LearnMore() {
         >
           LearnlyAI is designed to transform your study sessions by converting
           your text into smart, concise flashcards. Our intuitive tool helps you
-          capture essential concepts quickly and efficiently. Whether you're
+          capture essential concepts quickly and efficiently. Whether you&apos;re
           preparing for an exam or looking for a better way to organize your notes,
           LearnlyAI offers a smooth and engaging experience tailored to your needs.
         </Typography>

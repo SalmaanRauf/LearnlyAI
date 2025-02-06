@@ -22,14 +22,6 @@ export default function FlashcardSets() {
   const [sets, setSets] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    if (isLoaded && !isSignedIn) {
-      router.push('/sign-in');
-    } else if (isLoaded && isSignedIn) {
-      fetchFlashcardSets();
-    }
-  }, [isLoaded, isSignedIn]);
-
   const fetchFlashcardSets = async () => {
     try {
       const userDocRef = doc(db, 'users', userId);
@@ -48,6 +40,14 @@ export default function FlashcardSets() {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (isLoaded && !isSignedIn) {
+      router.push('/sign-in');
+    } else if (isLoaded && isSignedIn) {
+      fetchFlashcardSets();
+    }
+  }, [isLoaded, isSignedIn, router, userId, fetchFlashcardSets]);
 
   if (loading) {
     return (
