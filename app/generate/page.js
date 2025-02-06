@@ -18,8 +18,15 @@ import {
   DialogActions,
   CircularProgress
 } from "@mui/material";
-import { SignedIn, SignedOut, RedirectToSignIn, useAuth } from "@clerk/nextjs";
-import { doc, collection, writeBatch, getDoc } from "firebase/firestore";
+import { SignedIn, useAuth } from "@clerk/nextjs";
+import {
+  doc,
+  collection,
+  writeBatch,
+  updateDoc,
+  arrayUnion,
+  getDoc
+} from "firebase/firestore";
 import { db } from "../../firebase";
 
 export default function Generate() {
@@ -33,17 +40,23 @@ export default function Generate() {
   const handleGenerateFlashcards = async () => {
     if (!text.trim()) return;
     setLoading(true);
-    // Simulate an API call with a timeout (replace with your own logic)
-    setTimeout(() => {
-      const sentences = text.split(".").filter(sentence => sentence.trim());
-      const generated = sentences.map((sentence, index) => ({
+    try {
+      const response = await fetch("/api/generate", {
+        method: "POST",
+        body: text
+      });
+      const data = await response.json();
+      // Expecting { flashcards: [ { front, back }, ... ] }
+      const generated = data.flashcards.map((card, index) => ({
         id: index,
-        front: sentence.trim(),
-        back: "Answer for " + sentence.trim()
+        ...card
       }));
       setFlashcards(generated);
+    } catch (error) {
+      console.error("Error generating flashcards:", error);
+    } finally {
       setLoading(false);
-    }, 1000);
+    }
   };
 
   const handleOpenDialog = () => {
@@ -55,7 +68,45 @@ export default function Generate() {
   };
 
   const saveFlashcards = async () => {
-    // Save flashcards logic (e.g., using Firebase) goes here.
+    if (!userId) return;
+    if (!flashcardSetName.trim()) {
+      alert("Please enter a name for your flashcard set.");
+      return;
+    }
+    if (flashcards.length === 0) {
+      alert("No flashcards to save.");
+      return;
+    }
+
+    const setId = "set-" + Date.now();
+    const userDocRef = doc(db, "users", userId);
+    const batch = writeBatch(db);
+
+    // Update the user's flashcard sets array using arrayUnion.
+    batch.update(userDocRef, {
+      flashcards: arrayUnion({
+        id: setId,
+        name: flashcardSetName,
+        createdAt: new Date().toISOString()
+      })
+    });
+
+    // Create a document in a subcollection (named after the set) for each flashcard.
+    flashcards.forEach((card) => {
+      const cardRef = doc(collection(db, "users", userId, flashcardSetName));
+      batch.set(cardRef, card);
+    });
+
+    try {
+      await batch.commit();
+      alert("Flashcards saved successfully!");
+      // Clear flashcards and set name after save
+      setFlashcards([]);
+      setFlashcardSetName("");
+    } catch (error) {
+      console.error("Error saving flashcards:", error);
+      alert("Failed to save flashcards.");
+    }
     handleCloseDialog();
   };
 
