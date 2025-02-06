@@ -6,7 +6,7 @@ export default function SignUpPage() {
   return (
     <Box
       sx={{
-        bgcolor: '#0f0f0f',
+        backgroundColor: 'background.default',
         minHeight: '100vh',
         display: 'flex',
         flexDirection: 'column',
@@ -27,7 +27,7 @@ export default function SignUpPage() {
           flexDirection="column"
           justifyContent="center"
           alignItems="center"
-          sx={{ textAlign: 'center', mt: 8, color: 'white' }}
+          sx={{ textAlign: 'center', mt: 8 }}
         >
           <Typography variant="h4" component="h1" gutterBottom>
             Sign Up

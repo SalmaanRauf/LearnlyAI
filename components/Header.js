@@ -8,16 +8,10 @@ export default function Header() {
   const router = useRouter();
 
   return (
-    <AppBar position="fixed" sx={{ bgcolor: '#222' }}>
-      <Toolbar
-        sx={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          flexWrap: 'wrap',
-        }}
-      >
+    <AppBar position="fixed">
+      <Toolbar sx={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap' }}>
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          <Typography variant="h6" sx={{ color: 'white', mr: 2 }}>
+          <Typography variant="h6" sx={{ mr: 2 }}>
             LearnlyAI
           </Typography>
           <Button color="inherit" onClick={() => router.push('/')}>
@@ -32,18 +26,10 @@ export default function Header() {
         </Box>
         <Box>
           <SignedOut>
-            <Button
-              color="inherit"
-              onClick={() => router.push('/sign-in')}
-              sx={{ color: 'white' }}
-            >
+            <Button color="inherit" onClick={() => router.push('/sign-in')}>
               Login
             </Button>
-            <Button
-              color="inherit"
-              onClick={() => router.push('/sign-up')}
-              sx={{ color: 'white', ml: 1 }}
-            >
+            <Button color="inherit" onClick={() => router.push('/sign-up')} sx={{ ml: 1 }}>
               Sign Up
             </Button>
           </SignedOut>

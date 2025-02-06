@@ -58,15 +58,20 @@ export default function FlashcardSets() {
   }
 
   return (
-    <Box sx={{ bgcolor: '#0f0f0f', minHeight: '100vh' }}>
-      <Container maxWidth="md" sx={{ pt: 4 }}>
-        <Typography variant="h4" component="h1" gutterBottom sx={{ color: 'white' }}>
+    <Box sx={{ backgroundColor: 'background.default', minHeight: '100vh' }}>
+      <Container maxWidth="md" sx={{ pt: '80px', pb: '40px' }}>
+        <Typography
+          variant="h4"
+          component="h1"
+          gutterBottom
+          sx={{ textAlign: 'center', mb: 4, fontFamily: '"Playfair Display", serif' }}
+        >
           My Flashcard Sets
         </Typography>
-        <Grid container spacing={2}>
+        <Grid container spacing={4}>
           {sets.map((set, index) => (
-            <Grid item xs={12} sm={6} md={4} key={set.id ? set.id : index}>
-              <Card>
+            <Grid item xs={12} sm={6} md={4} key={set.id || index}>
+              <Card sx={{ borderRadius: 2, boxShadow: 3 }}>
                 <CardActionArea onClick={() => router.push(`/flashcards/study/${set.id}`)}>
                   <CardContent>
                     <Typography variant="h6" component="div">
