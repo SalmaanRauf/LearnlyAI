@@ -1,8 +1,9 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import { useAuth, UserButton } from '@clerk/nextjs';
+import { useAuth } from '@clerk/nextjs';
 import { useRouter } from 'next/navigation';
+import React from 'react';
 import {
   Container,
   Typography,
@@ -23,6 +24,9 @@ export default function StudySet({ params }) {
   const [flashcards, setFlashcards] = useState([]);
   const [loading, setLoading] = useState(true);
   const [flipped, setFlipped] = useState([]);
+  
+  const unwrappedParams = React.use(params);
+  const setId = unwrappedParams.setId;
 
   useEffect(() => {
     if (isLoaded && !isSignedIn) {
@@ -39,13 +43,20 @@ export default function StudySet({ params }) {
 
       if (userDocSnap.exists()) {
         const userData = userDocSnap.data();
-        // Look up the flashcard set by id (from route params)
-        const flashcardSet = userData.flashcards.find(set => set.id === params.setid);
-        if (!flashcardSet || !flashcardSet.name || !flashcardSet.name.trim()) {
-          console.error('Flashcard set not found or invalid');
+        const flashcardSet = userData.flashcards.find(set => set.id === setId);
+        
+        if (!flashcardSet) {
+          console.error('Flashcard set not found');
+          router.push('/flashcards');
+          return;
+        }
+
+        if (!flashcardSet.name || !flashcardSet.name.trim()) {
+          console.error('Invalid flashcard set name');
           setLoading(false);
           return;
         }
+
         const setName = flashcardSet.name.trim();
         const cardsRef = collection(db, 'users', userId, setName);
         const cardsSnapshot = await getDocs(cardsRef);
@@ -53,7 +64,7 @@ export default function StudySet({ params }) {
           id: doc.id,
           ...doc.data()
         }));
-
+        
         setFlashcards(cards);
         setFlipped(new Array(cards.length).fill(false));
       }
@@ -80,7 +91,6 @@ export default function StudySet({ params }) {
 
   return (
     <Box sx={{ bgcolor: '#0f0f0f', minHeight: '100vh' }}>
-      {/* Instead of a full header AppBar, we provide a simple back button */}
       <Box sx={{ p: 2 }}>
         <Button onClick={() => router.push('/flashcards')} variant="contained">
           Back to Sets
