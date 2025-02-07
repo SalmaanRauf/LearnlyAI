@@ -92,7 +92,12 @@ export default function StudySet({ params }) {
   return (
     <Box sx={{ bgcolor: '#0f0f0f', minHeight: '100vh' }}>
       <Box sx={{ p: 2 }}>
-        <Button onClick={() => router.push('/flashcards')} variant="contained">
+        <Button 
+          onClick={() => router.push('/flashcards')} 
+          variant="contained"
+          color="secondary"
+          sx={{ mt: 4 }}
+        >
           Back to Sets
         </Button>
       </Box>

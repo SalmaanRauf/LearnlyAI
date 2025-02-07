@@ -119,7 +119,12 @@ export default function FlashcardSets() {
           variant="h4"
           component="h1"
           gutterBottom
-          sx={{ textAlign: 'center', mb: 4, fontFamily: '"Playfair Display", serif' }}
+          sx={{ 
+            textAlign: 'center', 
+            mb: 4, 
+            fontFamily: '"Playfair Display", serif',
+            fontWeight: 'bold'
+          }}
         >
           My Flashcard Sets
         </Typography>
@@ -129,7 +134,14 @@ export default function FlashcardSets() {
               <Card sx={{ borderRadius: 2, boxShadow: 3, position: 'relative' }}>
                 <CardActionArea onClick={() => router.push(`/flashcards/study/${set.id}`)}>
                   <CardContent>
-                    <Typography variant="h6" component="div">
+                    <Typography 
+                      variant="h6" 
+                      component="div"
+                      sx={{
+                        fontFamily: '"Playfair Display", serif',
+                        fontWeight: 500
+                      }}
+                    >
                       {set.name}
                     </Typography>
                   </CardContent>
@@ -139,9 +151,9 @@ export default function FlashcardSets() {
                     position: 'absolute', 
                     top: 8, 
                     right: 8,
-                    color: 'error.main',
+                    color: '#FFD700',
                     '&:hover': { 
-                      backgroundColor: 'error.main',
+                      backgroundColor: '#FFD700',
                       color: 'white'
                     }
                   }}
